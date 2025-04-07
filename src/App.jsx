@@ -1,11 +1,17 @@
 
 
+import WidgetScreenWidht from './components/Widget/WidgetScreenWidht'
 import Routes from './Routes/Routes'
+import { Toaster } from 'react-hot-toast'
 
 function App() {
 
   return (
-    <Routes/>
+    <>
+      <WidgetScreenWidht />
+      <Toaster position="top-right" />
+      <Routes/>
+    </>
   )
 }
 
