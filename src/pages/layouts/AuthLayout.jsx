@@ -33,8 +33,8 @@ const AuthLayout = () => {
 
     <div className="flex flex-col md:flex-row min-h-screen bg-white font-poppins">
       {/* Left Section */}
-      <div className="w-full md:w-1/2 bg-white flex flex-col justify-center items-center p-10">
-        <div className="max-w-sm w-full text-center">
+      <div className="w-full md:w-1/2 lg:w-3/4 bg-white flex flex-col justify-center items-center p-10">
+        <div className="max-w-sm lg:max-w-md w-full text-center">
           <div className='w-full flex justify-center mb-10'>
             <img src={Logo} width="140px" />
 

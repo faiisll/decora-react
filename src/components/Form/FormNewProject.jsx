@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import MultiSelectUser from '../Select/MultiSelectUser';
+import SelectTemplateProject from '../Select/SelectTemplateProject';
+import Calendar from '../Calendar/Calendar';
+import DatePicker from '../Calendar/DatePicker';
 
 const FormNewProject = () => {
   const [projectName, setProjectName] = useState('');
@@ -25,7 +28,7 @@ const FormNewProject = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md">
+    <div className="max-w-4xl mx-auto p-6 bg-white lg:shadow-md rounded-md">
       <h2 className="text-2xl font-semibold text-center mb-6">Create New Project</h2>
       <form onSubmit={handleSubmit}>
         {/* Project Name */}
@@ -38,7 +41,6 @@ const FormNewProject = () => {
             onChange={(e) => setProjectName(e.target.value)}
             className="input input-bordered w-full"
             placeholder="Enter project name"
-            required
           />
         </div>
 
@@ -52,7 +54,6 @@ const FormNewProject = () => {
             className="textarea textarea-bordered w-full"
             placeholder="Enter project description"
             rows="4"
-            required
           />
         </div>
 
@@ -64,7 +65,6 @@ const FormNewProject = () => {
             value={projectLead}
             onChange={(e) => setProjectLead(e.target.value)}
             className="select select-bordered w-full"
-            required
           >
             <option value="">Select a project lead</option>
             <option value="lead1">Lead 1</option>
@@ -80,52 +80,22 @@ const FormNewProject = () => {
         </div>
 
         {/* Start Date */}
-        <div className="mb-4">
-          <label htmlFor="startDate" className="block text-sm font-medium mb-2">Start Date</label>
-          <input
-            type="date"
-            id="startDate"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            className="input input-bordered w-full"
-            required
-          />
-        </div>
 
-        {/* End Date */}
-        <div className="mb-4">
-          <label htmlFor="endDate" className="block text-sm font-medium mb-2">End Date</label>
-          <input
-            type="date"
-            id="endDate"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            className="input input-bordered w-full"
-            required
-          />
+        <div className='flex flex-col mb-4'>
+          <label htmlFor="startDate" className="block text-sm font-medium mb-2">Timeline</label>
+          <DatePicker multiple />
         </div>
-
-        {/* Project Template */}
-        <div className="mb-4">
+        
+        <div className='mb-4'>
           <label htmlFor="projectTemplate" className="block text-sm font-medium mb-2">Project Template</label>
-          <select
-            id="projectTemplate"
-            value={projectTemplate}
-            onChange={(e) => setProjectTemplate(e.target.value)}
-            className="select select-bordered w-full"
-            required
-          >
-            <option value="">Select a project template</option>
-            <option value="template1">Template 1</option>
-            <option value="template2">Template 2</option>
-            <option value="template3">Template 3</option>
-          </select>
+          <SelectTemplateProject />
         </div>
+        
 
         {/* Action Buttons */}
         <div className="flex justify-end gap-4 mt-6">
-          <button type="button" className="btn btn-secondary">Cancel</button>
-          <button type="submit" className="btn btn-primary">Save</button>
+          <button type="reset" className="btn btn-ghost">Cancel</button>
+          <button type="submit" className="btn btn-neutral">Save</button>
         </div>
       </form>
     </div>

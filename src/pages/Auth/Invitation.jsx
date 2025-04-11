@@ -5,18 +5,16 @@ import { NavLink } from 'react-router';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import InputPassword from '../../components/inputs/InputPassword';
 
-const Register = () => {
+const Invitation = () => {
     const initialValues = {
         email: '',
         name: '',
-        company: '',
         password: '',
         confirmPassword: '',
     };
     const validationSchema = Yup.object({
         email: Yup.string().email('Invalid email').required(),
         name: Yup.string().required(),
-        company: Yup.string().required(),
         password: Yup.string().min(6, 'Minimum 6 characters').required(),
         confirmPassword: Yup.string()
             .oneOf([Yup.ref('password'), null], 'Passwords must match')
@@ -29,9 +27,9 @@ const Register = () => {
     return (
         <>
             <div className='flex flex-col text-left'>
-                <div className="text-2xl font-semibold">Take the creative leap!</div>
+                <div className="text-2xl font-semibold">Invitation</div>
                 <p className="text-gray-500 mt-2 mb-10">
-                    Create an account and discover your next exciting project
+                    You got invited! Please complete the data to continue
                 </p>
 
             </div>
@@ -45,13 +43,10 @@ const Register = () => {
                     <Form className="flex flex-col">
                     {/* Email */}
                     <div className='mb-2'>
-                        <Input placeholder="Enter your email" type="text" name="email"></Input>
+                        <Input disabled={true} placeholder="Enter your email" type="text" name="email"></Input>
                     </div>
                     <div className='mb-2'>
                         <Input placeholder="Enter your name" type="text" name="name"></Input>
-                    </div>
-                    <div className='mb-2'>
-                        <Input placeholder="Enter your company name" type="text" name="company"></Input>
                     </div>
                     <div className='mb-2'>
                         <InputPassword placeholder="Enter your password " name="password" />
@@ -79,4 +74,4 @@ const Register = () => {
     );
 }
 
-export default Register;
+export default Invitation;

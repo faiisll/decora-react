@@ -9,7 +9,7 @@ export default function UnitSelectedUsers({selectedPerson}) {
                 <div className="tooltip-content">
                     <div className="">{selectedPerson.map(p => p.name).join(", ")}</div>
                 </div>
-                <div class="badge badge-soft badge-sm badge-neutral">+{(selectedPerson.length - 1)}</div>
+                <div className="badge badge-soft badge-sm badge-neutral">+{(selectedPerson.length - 1)}</div>
           </div>
         }
     </div>

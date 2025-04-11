@@ -12,7 +12,8 @@ import Team from '../pages/Team/Team';
 import { useLocation } from 'react-router';
 import {AnimatePresence} from "motion/react"
 import ProjectDetail from '../pages/Project/ProjectDetail';
-import FormNewProject from '../components/Form/FormNewProject';
+import NewProject from '../pages/Project/NewProject';
+import Invitation from '../pages/Auth/Invitation';
 const AllRoutes = () => {
     const location = useLocation();
     let isAuth = useSelector((state) => state.auth.isAuth)
@@ -23,13 +24,14 @@ const AllRoutes = () => {
                     <Route index element={<Navigate to={"/login"} />}/>
                     <Route path='login' element={<Login />}/>
                     <Route path='register' element={<Register />}/>
+                    <Route path='invitation' element={<Invitation />}/>
                 </Route>
                 <Route element={isAuth ? <DashboardLayout /> : <Navigate to={"/login"} />} path='/'>
                     <Route index element={<Navigate to={"/dashboard"} />}/>
                     <Route path='dashboard' element={<Dashboard />}/>
                     <Route path='project' element={<Project />}/>
                     <Route path='project/:id' element={<ProjectDetail />}/>
-                    <Route path='project/new' element={<FormNewProject />}/>
+                    <Route path='project/new' element={<NewProject />}/>
                     <Route path='task' element={<Taks />}/>
                     <Route path='teams' element={<Team />}/>
                 </Route>

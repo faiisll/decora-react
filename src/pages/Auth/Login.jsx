@@ -25,8 +25,8 @@ const Login = () => {
         setTimeout(() => {
             dispatch(setAuth(true))
             createToast({
-                type: "wa",
-                message: "failed generate"
+                type: "success",
+                message: "Welcome, Faisal Ayash "
             })
             setLoading(false)
         }, 1400);
