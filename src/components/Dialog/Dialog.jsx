@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Description, Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { AnimatePresence, motion } from 'motion/react';
+import clsx from 'clsx';
 
-const DialogModal = ({ onToggle = () => {}, open = false, ...props}) => {
+const DialogModal = ({ onToggle = () => {}, open = false, size = "w-sm", ...props}) => {
     let [isOpen, setIsOpen] = useState(false)
     
     useEffect(() => {
@@ -33,7 +34,7 @@ const DialogModal = ({ onToggle = () => {}, open = false, ...props}) => {
                         exit={{ opacity: 0, y: "-10px"}}
                         transition={{duration: 0.4}}
                         as={motion.div}
-                        className="max-w-lg w-md space-y-4 shadow-lg rounded-lg bg-white p-8">
+                        className={clsx("max-w-2xl space-y-4 shadow-lg rounded-lg bg-white p-8 max-h-full", size)}>
                             {props.children}
                         </DialogPanel>
                     </motion.div>

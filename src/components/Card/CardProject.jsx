@@ -1,8 +1,15 @@
 import React from 'react'
+const project2 = {
+    name: "Redesign cozzy apartment",
+    description: "Make interior with theme scandinavian",
+    status: "Ongoing",
+    endDate: "2 june",
+    lead: "Hart Hagerty"
+  }
 
-export default function CardProject({project}) {
+export default function CardProject({project = project2}) {
   return (
-    <div className='card card-md border border-gray-200 shadow-md'>
+    <div className='card card-md bg-neutral-50'>
         <div className="card-body flex flex-col">
             <div className='flex justify-between items-center'>
                 <div className="badge badge-sm badge-soft badge-warning">{project.status}</div>

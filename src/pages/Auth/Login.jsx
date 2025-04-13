@@ -25,7 +25,7 @@ const Login = () => {
         setTimeout(() => {
             dispatch(setAuth(true))
             createToast({
-                type: "success",
+                type: "warning",
                 message: "Welcome, Faisal Ayash "
             })
             setLoading(false)

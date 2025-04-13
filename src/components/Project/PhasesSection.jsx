@@ -1,6 +1,8 @@
 import { useState } from "react";
 import DialogPhase from "../Dialog/DialogPhase";
 import PhaseDisclosure from "./PhaseDisclosure";
+import DialogCreateTask from "../Dialog/DialogCreateTask";
+import DialogDetailTask from "../Dialog/DialogDetailTask";
 
 const phasesDummy = [
   {
@@ -42,24 +44,39 @@ const phasesDummy = [
 
 export default function PhasesSection({phases = phasesDummy}) {
   const [isDialogPhaseOpen,setIsDialogPhaseOpen] = useState(false)
+  const [isDialogTaskOpen,setIsDialogTaskOpen] = useState(false)
+  const [isDialogTaskDetailOpen,setIsDialogTaskDetailOpen] = useState(false)
+  const [selectedTask, setSelectedTask] = useState(null)
   const openDialogPhase = () => {
     setIsDialogPhaseOpen(true)
+  }
+  const openDialogTask = () => {
+    setIsDialogTaskOpen(true)
+  }
+  const openDialogTaskDetail = (task) => {
+    setIsDialogTaskDetailOpen(true)
+    setSelectedTask(task)
   }
 
 
   return (
       <div className="w-full flex flex-col gap-4">
         <DialogPhase id="dialog-phase" open={isDialogPhaseOpen} onChange={setIsDialogPhaseOpen} />
+        <DialogCreateTask open={isDialogTaskOpen} onChange={setIsDialogTaskOpen} />
+        <DialogDetailTask open={isDialogTaskDetailOpen} onChange={setIsDialogTaskDetailOpen} task={selectedTask} />
         <div className='flex justify-between items-center'>
           <h3 className='text-lg font-semibold'>Phase list</h3>
           <div className='flex gap-1'>
-            <button className='btn btn-soft btn-sm'>Create Task</button>
+            <button className='btn btn-soft btn-sm' onClick={openDialogTask}>Create Task</button>
             <button className='btn btn-neutral btn-sm' onClick={openDialogPhase}>New Phase</button>
-
           </div>
         </div>
         {phases.map((phase) => (
-          <PhaseDisclosure key={phase.id} phase={phase} tasks={phase.tasks} />
+          <PhaseDisclosure
+          key={phase.id}
+          phase={phase}
+          tasks={phase.tasks}
+          onClickTask={openDialogTaskDetail} />
         ))}
 
         

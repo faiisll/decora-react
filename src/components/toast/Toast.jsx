@@ -28,7 +28,7 @@ const createToast = ({type, message} = {type: "default", message:  "message "}) 
   const toastStyle = generateStyle(type)
   const Icon = generateIcon(type)
   return toast.custom((t) => (
-    <div className={`transition-opacity ${t.visible ? 'opacity-100' : 'opacity-0'}`}>
+    <div className={`transition-opacity rounded-lg ${t.visible ? 'opacity-100' : 'opacity-0'}`}>
       <div role="alert" className={`alert ${toastStyle} alert-soft`}>
         
         <Icon className="h-5 w-5 mt-1" />

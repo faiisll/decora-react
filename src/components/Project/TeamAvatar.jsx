@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import React from 'react';
 import { Tooltip } from 'react-tooltip';
 
-const TeamAvatar = ({name = "", role="", rounded = "rounded-xl", textSize="text-lg"}) => {
+const TeamAvatar = ({name = "", role="", rounded = "rounded-xl", textSize="text-lg", useTooltip = true}) => {
     const arrName = name.split(" ")
     const firstL = arrName[0][0].toUpperCase()
     const secL = arrName.length > 1 ? arrName[1][0].toUpperCase() : ""
@@ -24,9 +24,9 @@ const TeamAvatar = ({name = "", role="", rounded = "rounded-xl", textSize="text-
     const classN = clsx("avatar-tooltip w-full h-full flex justify-center items-center bg-neutral", themes[randomNumber], rounded)
     return (
       <>
-        <Tooltip id={`avatar-tooltip-${randomId}`} place="top">
+        {useTooltip && <Tooltip id={`avatar-tooltip-${randomId}`} place="top">
           {name} {role && `(${role})`}
-        </Tooltip>
+        </Tooltip>}
         <div data-tooltip-id={`avatar-tooltip-${randomId}`} className={classN}>
             <span className={textSize}>
               {firstL}{secL}
