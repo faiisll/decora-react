@@ -1,42 +1,45 @@
 import React from 'react'
-const project2 = {
-    name: "Redesign cozzy apartment",
-    description: "Make interior with theme scandinavian",
-    status: "Ongoing",
-    endDate: "2 june",
-    lead: "Hart Hagerty"
-  }
+import TeamAvatar from '../Project/TeamAvatar'
+import ProjectStatus from '../Status/ProjectStatus'
+import moment from 'moment'
+import { useNavigate } from 'react-router'
 
-export default function CardProject({project = project2}) {
+
+export default function CardProject({project}) {
+    const parseDateJoin = (date) => {
+        return moment(date).format("Do MMM, YYYY")
+    }
+
+    
+
+    const navigate = useNavigate()
+    const toProject = (id) => {
+        navigate("/project/"+id)
+    }
   return (
-    <div className='card card-md bg-neutral-50'>
+    project ? <div className='card card-md bg-neutral-50'>
         <div className="card-body flex flex-col">
             <div className='flex justify-between items-center'>
-                <div className="badge badge-sm badge-soft badge-warning">{project.status}</div>
-                <span className='text-xs'>{project.endDate}</span>
-
+                <ProjectStatus status={project.status} />
+                <span className='text-xs'>{parseDateJoin(project.endDate)}</span>
             </div>
 
-            <div className='flex flex-col cursor-pointer'>
+            <div className='flex flex-col cursor-pointer' onClick={() => {toProject(project.id)}}>
                 <h1 className='font-medium text-lg line-clamp-1 overflow-ellipsis'>{project.name}</h1>
                 <small className='text-gray-500 line-clamp-1 overflow-ellipsis'>{project.description}</small>
             </div>
 
             <div className="flex items-center gap-3 mt-4">
-                <div className="avatar">
-                    <div className="mask mask-squircle h-8 w-8">
-                        <img
-                        src="https://img.daisyui.com/images/profile/demo/2@94.webp"
-                        alt="Avatar Tailwind CSS Component" />
-                    </div>
-                </div>
+                {project.lead && <div className="w-8 h-8 aspect-square">
+                    <TeamAvatar name={project.lead} />
+                </div>}
                 <div>
-                <div className="text-xs opacity-50">Project Lead</div>
-                <div className="font-bold text-xs">{project.lead}</div>
+                    <div className="text-xs opacity-50">Project Lead</div>
+                    <div className="font-bold text-xs">{project.lead ? project.lead : "Unassigned"}</div>
                 </div>
             </div>
 
         </div>
-    </div>
+    </div> : ""
   )
 }

@@ -18,7 +18,6 @@ const DialogPhase = ({ phase = null, open = false, onChange = () => {}}) => {
     });
 
     const handleSubmit = (values, actions) => {
-        console.log('Submitted values:', values);
         actions.setSubmitting(false);
         // Here you'd probably close the dialog and call a parent handler
     };

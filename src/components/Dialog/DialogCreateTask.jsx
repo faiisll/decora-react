@@ -71,7 +71,11 @@ const DialogCreateTask = ({open = false, onChange = () => {}}) => {
 
                                     </div>
                                     <div className='flex flex-col pt-1'>
-                                        <DatePicker name='dueDate' showToggle={false} value={values.dueDate} onChange={(d) => {
+                                        <DatePicker
+                                        name='dueDate'
+                                        showToggle={false}
+                                        value={values.dueDate}
+                                        onChange={(d) => {
                                             setFieldValue('dueDate', d)
                                         }}
                                         error={touched["dueDate"] && errors["dueDate"]}/>

@@ -11,14 +11,13 @@ export default function DialogDetailTask({open = false, onChange= (e) => {}, tas
             {task && <TaskItem task={task} />}
 
             <div className='flex flex-col'>
-                <span className='text-sm text-neutral-400'>Notes</span>
+                <span className='text-sm text-neutral-400 mb-2'>Activies</span>
                 <p>Some changes need to be check bos!</p>
-            </div>
-            <div className='flex flex-col'>
-                <span className='text-sm text-neutral-400'>Document</span>
-                <div className='flex px-4 bg-neutral-50 py-4 gap-4 items-center w-fit rounded-xl cursor-pointer'>
-                    <span className='underline underline-offset-4 text-indigo-500'>Design revision.pdf</span>
-                    <HiCloudDownload className='text-xl text-neutral-700' />
+                <div className='flex flex-col'>
+                    <div className='flex px-4 bg-neutral-50 py-4 gap-4 items-center w-fit rounded-xl cursor-pointer'>
+                        <span className='underline underline-offset-4 text-indigo-500'>Design revision.pdf</span>
+                        <HiCloudDownload className='text-xl text-neutral-700' />
+                    </div>
                 </div>
             </div>
 

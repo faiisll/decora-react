@@ -3,101 +3,107 @@ import MultiSelectUser from '../Select/MultiSelectUser';
 import SelectTemplateProject from '../Select/SelectTemplateProject';
 import Calendar from '../Calendar/Calendar';
 import DatePicker from '../Calendar/DatePicker';
+import { Formik, Form } from 'formik';
+import * as Yup from "yup"
+import Input from '../inputs/Input';
+import clsx from 'clsx';
 
 const FormNewProject = () => {
-  const [projectName, setProjectName] = useState('');
-  const [projectDescription, setProjectDescription] = useState('');
-  const [projectLead, setProjectLead] = useState('');
-  const [teamMembers, setTeamMembers] = useState([]);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [projectTemplate, setProjectTemplate] = useState('');
+  const initialValues = {
+    name: "",
+    description: "",
+    lead: "",
+    teams: [],
+    timeline: [null, null],
+  }
 
-  // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log({
-      projectName,
-      projectDescription,
-      projectLead,
-      teamMembers,
-      startDate,
-      endDate,
-      projectTemplate,
-    });
-  };
+  const validationSchema = Yup.object({
+    name: Yup.string().min(5).required(),
+    description: Yup.string().min(5),
+    lead: Yup.string().required(),
+    teams: Yup.array().required(),
+    timeline: Yup.array().test("not nuull", "Timeline project is required.", (val) => {
+      return val.every(v => Boolean(v))
+    })
+  })
+
+  const handleSubmit = (values, actions) => {
+    console.log(values)
+
+  }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-md">
+    <div className="max-w-4xl mx-auto p-6 rounded-md bg-gray-50 shadow">
       <h2 className="text-2xl font-semibold text-center mb-6">Create New Project</h2>
-      <form onSubmit={handleSubmit}>
-        {/* Project Name */}
-        <div className="mb-4">
-          <label htmlFor="projectName" className="block text-sm font-medium mb-2">Project Name</label>
-          <input
-            type="text"
-            id="projectName"
-            value={projectName}
-            onChange={(e) => setProjectName(e.target.value)}
-            className="input input-bordered w-full"
-            placeholder="Enter project name"
-          />
-        </div>
+      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
 
-        {/* Project Description */}
-        <div className="mb-4">
-          <label htmlFor="projectDescription" className="block text-sm font-medium mb-2">Project Description</label>
-          <textarea
-            id="projectDescription"
-            value={projectDescription}
-            onChange={(e) => setProjectDescription(e.target.value)}
-            className="textarea textarea-bordered w-full"
-            placeholder="Enter project description"
-            rows="4"
-          />
-        </div>
+        {({setFieldValue, values, touched, errors}) => (
+          <Form>
+              <div className="mb-4">
+                <label htmlFor="projectName" className="block text-sm font-medium mb-2">Project Name</label>
+                <Input
+                type="text"
+                name='name'
+                placeholder="Enter project name"/>
+              </div>
 
-        {/* Project Lead */}
-        <div className="mb-4">
-          <label htmlFor="projectLead" className="block text-sm font-medium mb-2">Project Lead</label>
-          <select
-            id="projectLead"
-            value={projectLead}
-            onChange={(e) => setProjectLead(e.target.value)}
-            className="select select-bordered w-full"
-          >
-            <option value="">Select a project lead</option>
-            <option value="lead1">Lead 1</option>
-            <option value="lead2">Lead 2</option>
-            <option value="lead3">Lead 3</option>
-          </select>
-        </div>
+              {/* Project Description */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">Description</label>
+                <Input
+                placeholder="Enter project description"
+                name="description"
+                />
+              </div>
 
-        {/* Team Members */}
-        <div className="mb-4">
-          <label htmlFor="teamMembers" className="block text-sm font-medium mb-2">Team Members</label>
-          <MultiSelectUser />
-        </div>
+              {/* Project Lead */}
+              <div className="mb-4">
+                <label htmlFor="projectLead" className="block text-sm font-medium mb-2">Project Lead</label>
+                <select
+                value={values.lead}
+                onChange={(e) => {setFieldValue("lead" ,e.target.value)}}
+                id="projectLead"
+                className={clsx("select select-bordered w-full" , touched["lead"] && errors["lead"] ? 'select-error' : '')}>
+                  <option value="" disabled>Select a project lead</option>
+                  <option value="lead1">Lead 1</option>
+                  <option value="lead2">Lead 2</option>
+                  <option value="lead3">Lead 3</option>
+                </select>
+                {touched["lead"] && errors["lead"] ? (<p className="validator-hint text-red-500 mt-1">{errors["lead"]}</p>) : null}
+              </div>
 
-        {/* Start Date */}
+              {/* Team Members */}
+              <div className="mb-4">
+                <label htmlFor="teamMembers" className="block text-sm font-medium mb-2">Team Members</label>
+                <MultiSelectUser value={values.teams} onChange={(e) => {setFieldValue("teams", e)}}  />
+              </div>
 
-        <div className='flex flex-col mb-4'>
-          <label htmlFor="startDate" className="block text-sm font-medium mb-2">Timeline</label>
-          <DatePicker multiple />
-        </div>
-        
-        <div className='mb-4'>
-          <label htmlFor="projectTemplate" className="block text-sm font-medium mb-2">Project Template</label>
-          <SelectTemplateProject />
-        </div>
-        
+              {/* Start Date */}
 
-        {/* Action Buttons */}
-        <div className="flex justify-end gap-4 mt-6">
-          <button type="reset" className="btn btn-ghost">Cancel</button>
-          <button type="submit" className="btn btn-neutral">Save</button>
-        </div>
-      </form>
+              <div className='flex flex-col mb-4'>
+                <label htmlFor="startDate" className="block text-sm font-medium mb-2">Timeline</label>
+                <DatePicker multiple value={values.timeline} onChange={(e) => {setFieldValue('timeline', e)}} />
+                {touched["timeline"] && errors["timeline"] ? (<p className="validator-hint text-red-500 mt-1">{errors["timeline"]}</p>) : null}
+              </div>
+              
+              <div className='mb-4'>
+                <label htmlFor="projectTemplate" className="block text-sm font-medium mb-2">Project Template</label>
+                <SelectTemplateProject />
+              </div>
+              
+
+              {/* Action Buttons */}
+              <div className="flex justify-end gap-4 mt-6">
+                <button type="reset" className="btn btn-ghost">Cancel</button>
+                <button type="submit" className="btn btn-neutral">Save</button>
+              </div>
+            {/* Project Name */}
+
+          </Form>
+
+        )}
+
+      </Formik>
     </div>
   );
 };

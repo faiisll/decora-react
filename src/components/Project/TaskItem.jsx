@@ -6,7 +6,7 @@ import ProjectStatus from '../Status/ProjectStatus';
 const TaskItem = ({task, ...props}) => {
     const titleClass = "text-sm text-neutral-500"
     return (
-        <div {...props} className='w-full flex flex-col bg-gray-100 rounded-xl px-4 sm:px-8 py-6 gap-4 sm:flex-row sm:justify-between sm:items-center'>
+        <div {...props} className='w-full cursor-pointer flex flex-col bg-gray-100 rounded-xl px-4 sm:px-8 py-6 gap-4 sm:flex-row sm:justify-between sm:items-center'>
             <div className='flex flex-col sm:grow sm:w-1/2'>
                 <span className={clsx(titleClass)}>Title</span>
                 <h4 className='line-clamp-1 overflow-ellipsis'>{task.name}</h4>

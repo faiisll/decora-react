@@ -1,24 +1,27 @@
 import React from 'react'
+import RowTeam from './Row/RowTeam'
+import CellHead from './Cell/CellHead'
 
-export default function TableTeams() {
+const headers = ["No.", "Name", "Email", "Role", "Job Title", "Join At", ""]
+export default function TableTeams({data = [], loading}) {
   return (
     <div className="overflow-x-auto grow max-h-[80vh]">
-        <table className="table table-zebra table-pin-rows">
-            {/* head */}
-            <thead className='w-full'>
+      <div className="overflow-x-auto bg-neutral-50 rounded-lg">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
             <tr>
-                <th>No</th>
-                <th className='min-w-[240px]'>Name</th>
-                <th>Role</th>
-                <th className='min-w-[200px]'>Job Title</th>
-                <th className='min-w-[140px]'>Join Date</th>
-                <th>Action</th>
+              {headers.map((head, index) => (
+                <CellHead key={index}>{head}</CellHead>
+              ))}
             </tr>
-            </thead>
-            <tbody>
-            
-            </tbody>
+          </thead>
+          <tbody className=" divide-y divide-gray-200">
+            {data.map((user, index) => (
+              <RowTeam user={user} key={index} index={index} />
+            ))}
+          </tbody>
         </table>
+      </div>
     </div>
   )
 }

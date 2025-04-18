@@ -1,12 +1,11 @@
 import React from 'react';
-import AnimatePageFade from '../../components/Animate/AnimatePageFade';
 import FormNewProject from '../../components/Form/FormNewProject';
 
 const NewProject = () => {
     return (
-        <AnimatePageFade className="w-full">
+        <div className="w-full">
             <FormNewProject />
-        </AnimatePageFade>
+        </div>
     );
 }
 

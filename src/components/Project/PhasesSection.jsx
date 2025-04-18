@@ -3,6 +3,7 @@ import DialogPhase from "../Dialog/DialogPhase";
 import PhaseDisclosure from "./PhaseDisclosure";
 import DialogCreateTask from "../Dialog/DialogCreateTask";
 import DialogDetailTask from "../Dialog/DialogDetailTask";
+import EmptyState from "../Empty/EmptyState";
 
 const phasesDummy = [
   {
@@ -42,7 +43,7 @@ const phasesDummy = [
   },
 ];
 
-export default function PhasesSection({phases = phasesDummy}) {
+export default function PhasesSection({phases = []}) {
   const [isDialogPhaseOpen,setIsDialogPhaseOpen] = useState(false)
   const [isDialogTaskOpen,setIsDialogTaskOpen] = useState(false)
   const [isDialogTaskDetailOpen,setIsDialogTaskDetailOpen] = useState(false)
@@ -64,13 +65,13 @@ export default function PhasesSection({phases = phasesDummy}) {
         <DialogPhase id="dialog-phase" open={isDialogPhaseOpen} onChange={setIsDialogPhaseOpen} />
         <DialogCreateTask open={isDialogTaskOpen} onChange={setIsDialogTaskOpen} />
         <DialogDetailTask open={isDialogTaskDetailOpen} onChange={setIsDialogTaskDetailOpen} task={selectedTask} />
-        <div className='flex justify-between items-center'>
+        {phases.length > 0 && <div className='flex justify-between items-center'>
           <h3 className='text-lg font-semibold'>Phase list</h3>
           <div className='flex gap-1'>
             <button className='btn btn-soft btn-sm' onClick={openDialogTask}>Create Task</button>
             <button className='btn btn-neutral btn-sm' onClick={openDialogPhase}>New Phase</button>
           </div>
-        </div>
+        </div>}
         {phases.map((phase) => (
           <PhaseDisclosure
           key={phase.id}
@@ -78,6 +79,10 @@ export default function PhasesSection({phases = phasesDummy}) {
           tasks={phase.tasks}
           onClickTask={openDialogTaskDetail} />
         ))}
+
+        {!phases.length && <div className="w-full h-80">
+          <EmptyState onClick={openDialogPhase} title="Project is empty" message="Let’s get started! Add a phase and task to begin your project journey" />
+        </div> }
 
         
       </div>

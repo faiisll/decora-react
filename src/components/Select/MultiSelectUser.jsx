@@ -34,11 +34,6 @@ export default function MultiSelectUser({value = [], onChange = (vals) => {}, op
       onChange(emails)
     }, [selectedPerson])
 
-    useEffect(() => {
-      if(value.length !== selectedPerson.length){
-
-      }
-    }, value)
   return (
     <Listbox as='div' className='w-full relative text-sm' multiple value={selectedPerson} onChange={setSelectedPerson}>
         <ListboxButton disabled={disabled || loading} className={clsx(

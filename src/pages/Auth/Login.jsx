@@ -7,10 +7,11 @@ import { NavLink } from 'react-router';
 import createToast from '../../components/toast/Toast.jsx';
 import { useDispatch } from 'react-redux'
 import {setAuth} from "../../store/authSlice.js"
+import { useLoginMutation } from '../../store/apis/authApi.js';
 
 const Login = () => {
+    const [login, { isLoading, error, isError }] = useLoginMutation();
     const dispatch = useDispatch()
-    const [loading, setLoading] = useState(false)
     const initialForm = {
         email: "",
         password: ""
@@ -20,16 +21,37 @@ const Login = () => {
         password: Yup.string().required()
     })
 
-    const handleSubmit = (values, { setSubmitting }) => {
-        setLoading(true)
-        setTimeout(() => {
-            dispatch(setAuth(true))
-            createToast({
-                type: "warning",
-                message: "Welcome, Faisal Ayash "
+    const handleSubmit = async (values, { setSubmitting }) => {
+
+        try{
+            login(values).unwrap().then(res => {
+
+            }).catch(err => {
+                console.log(err.data);
+                if(err.status >= 400){
+                    createToast({
+                        type: "error",
+                        message: err.data.message
+                    })
+                    
+                }
+                console.log(err);
             })
-            setLoading(false)
-        }, 1400);
+
+            // console.log(res);
+            if(res.status >= 200 && res.status < 300){
+                createToast({
+                    type: "success",
+                    message: "Authenticated"
+                })
+            }
+            
+
+        }catch {
+
+        }
+        
+        
     }
     return (
         <>
@@ -48,13 +70,13 @@ const Login = () => {
                 <Form>
                     <div className='w-full flex flex-col gap-3'>
                         <div className='flex flex-col text-left'>
-                            <Input disabled={loading} placeholder="Enter your email here" type="text" name="email"></Input>
+                            <Input disabled={isLoading} placeholder="Enter your email here" type="text" name="email"></Input>
                         </div>
                         <div className='flex flex-col text-left'>
-                            <InputPassword disabled={loading} placeholder="Enter your password here" name="password"/>
+                            <InputPassword disabled={isLoading} placeholder="Enter your password here" name="password"/>
                         </div>
-                        <button disabled={loading} type='submit' className="btn w-full btn-neutral">
-                            {loading ?<span className='loading loading-spinner'></span> :
+                        <button disabled={isLoading} type='submit' className="btn w-full btn-neutral">
+                            {isLoading ?<span className='loading loading-spinner'></span> :
                             <span>Login</span>}
                         </button>
 

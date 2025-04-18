@@ -1,17 +1,70 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Input from '../../components/inputs/Input';
 import * as Yup from 'yup';
-import { NavLink } from 'react-router';
+import { NavLink, useNavigate, useSearchParams } from 'react-router';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import InputPassword from '../../components/inputs/InputPassword';
+import configAxios from '../../config/configAxios';
+import FullScreenLoader from '../../components/Loading/FullscreenLoader';
+import createToast from '../../components/toast/Toast';
+import { useVerificationMutation } from '../../store/apis/authApi';
 
 const Invitation = () => {
-    const initialValues = {
+    const navigate = useNavigate()
+    const [loadToken, setLoadToken] = useState(false)
+    let [searchParams] = useSearchParams();
+    let [initialValues, setInitial] = useState({
         email: '',
         name: '',
         password: '',
         confirmPassword: '',
-    };
+    });
+    
+
+    const checkToken = async (token) => {
+        setLoadToken(true)
+        
+        try {
+            let res = await configAxios.get("/teams/invite/verify?token="+token)
+            return res.data
+        }catch(err){
+            throw err.response.data.message
+        }finally{
+            setLoadToken(false)
+        }
+    }
+
+    const init = () => {
+        let token = searchParams.get("token")
+        
+        if(!token){
+          navigate('/', { replace: true })
+          return
+        }
+    
+        checkToken(token).then((res) => {
+    
+            const dataInvite = res.data
+            if(dataInvite){
+                setInitial({ ...initialValues, email: dataInvite.email})
+                initialValues.email = dataInvite.email
+                createToast({
+                    type: "success",
+                    message: "Valid invitation link."
+                })
+            }
+        }).catch(err => {
+            createToast({
+                type: "error",
+                message: "Invalid invitation link."
+            })
+            navigate('/', { replace: true })
+        })
+    }
+
+    useEffect(() => {
+        init()
+    }, [])
     const validationSchema = Yup.object({
         email: Yup.string().email('Invalid email').required(),
         name: Yup.string().required(),
@@ -21,10 +74,23 @@ const Invitation = () => {
             .required(),
     });
 
+    const [verif, {isLoading}] = useVerificationMutation()
     const handleSubmit = (values) => {
-        console.log('Form data:', values);
+        let token = searchParams.get("token")
+        verif({...values, token}).unwrap().then((res) => {
+            createToast({
+                type: "success",
+                message: "Welcome, you've verified"
+            })
+
+        }).catch(err => {
+            createToast({
+                type: "error",
+                message: err.data.message
+            })
+        })
     };
-    return (
+    return (!loadToken ?
         <>
             <div className='flex flex-col text-left'>
                 <div className="text-2xl font-semibold">Invitation</div>
@@ -36,27 +102,27 @@ const Invitation = () => {
 
             <div className='w-full flex flex-col text-left'>
                 <Formik
-                    initialValues={initialValues}
-                    validationSchema={validationSchema}
-                    onSubmit={handleSubmit}
-                >
+                enableReinitialize={true}
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={handleSubmit}>
                     <Form className="flex flex-col">
                     {/* Email */}
                     <div className='mb-2'>
                         <Input disabled={true} placeholder="Enter your email" type="text" name="email"></Input>
                     </div>
                     <div className='mb-2'>
-                        <Input placeholder="Enter your name" type="text" name="name"></Input>
+                        <Input disabled={isLoading} placeholder="Enter your name" type="text" name="name"></Input>
                     </div>
                     <div className='mb-2'>
-                        <InputPassword placeholder="Enter your password " name="password" />
+                        <InputPassword disabled={isLoading} placeholder="Enter your password " name="password" />
                     </div>
                     <div className='mb-2'>
-                        <InputPassword placeholder="Enter confirm password " name="confirmPassword" />
+                        <InputPassword disabled={isLoading} placeholder="Enter confirm password " name="confirmPassword" />
                     </div>
 
-                    <button type="submit" className="btn btn-primary mt-4">
-                        Register
+                    <button type="submit" disabled={isLoading} className="btn btn-neutral mt-4">
+                        Verif
                     </button>
                     </Form>
                 </Formik>
@@ -70,7 +136,7 @@ const Invitation = () => {
             <p className="mt-10 text-gray-500">
                 Already have an account ? <NavLink to="/login" className="text-black font-semibold">Sign in here. </NavLink>
             </p>
-        </>
+        </> : <FullScreenLoader />
     );
 }
 

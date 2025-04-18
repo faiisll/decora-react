@@ -4,19 +4,22 @@ import * as Yup from 'yup';
 import { NavLink } from 'react-router';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import InputPassword from '../../components/inputs/InputPassword';
+import { useRegisterMutation } from '../../store/apis/authApi';
+import createToast from '../../components/toast/Toast';
 
 const Register = () => {
+    const [regis, {isLoading}] = useRegisterMutation()
     const initialValues = {
         email: '',
         name: '',
-        company: '',
+        companyName: '',
         password: '',
         confirmPassword: '',
     };
     const validationSchema = Yup.object({
         email: Yup.string().email('Invalid email').required(),
         name: Yup.string().required(),
-        company: Yup.string().required(),
+        companyName: Yup.string().required("The company name is required."),
         password: Yup.string().min(6, 'Minimum 6 characters').required(),
         confirmPassword: Yup.string()
             .oneOf([Yup.ref('password'), null], 'Passwords must match')
@@ -24,7 +27,18 @@ const Register = () => {
     });
 
     const handleSubmit = (values) => {
-        console.log('Form data:', values);
+        regis(values).unwrap().then(() => {
+            createToast({
+                type: "success",
+                message: "Welcome, you've registered"
+            })
+        }).catch((err) => {
+            createToast({
+                type: "error",
+                message: err.data.message
+            })
+        })
+
     };
     return (
         <>
@@ -51,7 +65,7 @@ const Register = () => {
                         <Input placeholder="Enter your name" type="text" name="name"></Input>
                     </div>
                     <div className='mb-2'>
-                        <Input placeholder="Enter your company name" type="text" name="company"></Input>
+                        <Input placeholder="Enter your company name" type="text" name="companyName"></Input>
                     </div>
                     <div className='mb-2'>
                         <InputPassword placeholder="Enter your password " name="password" />
@@ -60,7 +74,7 @@ const Register = () => {
                         <InputPassword placeholder="Enter confirm password " name="confirmPassword" />
                     </div>
 
-                    <button type="submit" className="btn btn-primary mt-4">
+                    <button type="submit" className="btn btn-neutral mt-4">
                         Register
                     </button>
                     </Form>

@@ -1,5 +1,4 @@
 import React from 'react'
-import AnimatePageFade from '../../components/Animate/AnimatePageFade'
 import DashboardProjectStat from '../../components/Dashboard/DashboardProjectStat'
 import CardProject from '../../components/Card/CardProject'
 import { NavLink } from 'react-router'
@@ -7,7 +6,7 @@ import CardActivity from '../../components/Card/CardActivity'
 
 export default function Dashboard() {
   return (
-    <AnimatePageFade className='w-full flex flex-col min-h-full overflow-y-auto gap-8 '>
+    <div className='w-full flex flex-col min-h-full overflow-y-auto gap-8 '>
       <div>
         <h1 className='font-medium text-lg'>Helo, Faisal Ayash</h1>
         <h2 className='text-sm text-gray-400'>Monitor your interior design project progress</h2>
@@ -47,6 +46,6 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-    </AnimatePageFade>
+    </div>
   )
 }

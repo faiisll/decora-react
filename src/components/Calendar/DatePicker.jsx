@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { Transition } from '@headlessui/react';
 import { validateDate } from '../../helpers/DateHelper';
 
-const DatePicker = ({disabled, multiple = false, value, onChange = (date) => {console.log(date)}, name = "", showToggle = true}, error = false) => {
+const DatePicker = ({disabled, multiple = false, value, onChange = (date) => {console.log(date)}, name = "", showToggle = true, error = false}) => {
     const calendarRef = useRef(null)
     const [dateRange, setDateRange] = useState([null, null])
     const [dateSingle, setDateSingle] = useState("")
@@ -115,7 +115,7 @@ const DatePicker = ({disabled, multiple = false, value, onChange = (date) => {co
 
     useEffect(() => {
         renderValue()
-    }, [value])
+    }, [])
 
     useEffect(() => {
         if(multiple){
@@ -141,7 +141,7 @@ const DatePicker = ({disabled, multiple = false, value, onChange = (date) => {co
                 onClick={() => {setCalendarVisible(true)}}
                 value={maskedValue}
                 placeholder={multiple ? 'DD/MM/YYYY-DD/MM/YYYY' : "DD/MM/YYYY"}
-                className={clsx('input input-bordered w-full join-item', error && "input-error")} />
+                className={clsx('input w-full join-item', error && "input-error")} />
                 {isClearable && <button disabled={disabled} onClick={clear} type='button' className='btn rounded-r-xl'>
                     <TbCircleX className='text-xl text-neutral-500' />
                 </button>}

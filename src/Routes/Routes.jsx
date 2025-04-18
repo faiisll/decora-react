@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router'
 import AdminLayout from "../pages/layouts/AuthLayout"
 import Login from '../pages/Auth/Login';
@@ -14,9 +14,26 @@ import {AnimatePresence} from "motion/react"
 import ProjectDetail from '../pages/Project/ProjectDetail';
 import NewProject from '../pages/Project/NewProject';
 import Invitation from '../pages/Auth/Invitation';
+import { setAuth } from '../store/authSlice';
+import { useGetUserMutation } from '../store/apis/authApi';
+import FullScreenLoader from '../components/Loading/FullscreenLoader';
 const AllRoutes = () => {
     const location = useLocation();
     let isAuth = useSelector((state) => state.auth.isAuth)
+    let userData = useSelector((state) => state.auth.dataUser)
+    const dispatch = useDispatch()
+    const [getUser, {isLoading, isSuccess}] = useGetUserMutation()
+
+    useEffect(() => {
+        let token = localStorage.getItem('token')
+        if(token){
+            dispatch(setAuth(true))
+        }
+        if(!userData && token){
+            getUser()
+        }
+
+    }, [])
     return (
         <AnimatePresence >
             <Routes location={location} key={location.pathname}>
@@ -26,7 +43,7 @@ const AllRoutes = () => {
                     <Route path='register' element={<Register />}/>
                     <Route path='invitation' element={<Invitation />}/>
                 </Route>
-                <Route element={isAuth ? <DashboardLayout /> : <Navigate to={"/login"} />} path='/'>
+                <Route element={<DashboardLayout loading={isLoading} user={userData} />} path='/'>
                     <Route index element={<Navigate to={"/dashboard"} />}/>
                     <Route path='dashboard' element={<Dashboard />}/>
                     <Route path='project' element={<Project />}/>
