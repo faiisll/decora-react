@@ -37,7 +37,7 @@ export default function MultiSelectUser({value = [], onChange = (vals) => {}, op
   return (
     <Listbox as='div' className='w-full relative text-sm' multiple value={selectedPerson} onChange={setSelectedPerson}>
         <ListboxButton disabled={disabled || loading} className={clsx(
-          "w-full border border-neutral-300 py-3 px-4 rounded text-left  text-sm flex justify-between items-center",
+          "w-full border border-neutral-300 py-3 px-4 rounded text-left bg-white  text-sm flex justify-between items-center",
           loading || disabled ? "cursor-not-allowed bg-neutral-100" : "cursor-auto"
         )} as='div'>
             {selectedPerson.length ? <UnitSelectedUsers selectedPerson={selectedPerson} />  : <span className='text-neutral-400 font-light'>Select Users</span>}
@@ -45,7 +45,7 @@ export default function MultiSelectUser({value = [], onChange = (vals) => {}, op
             <span className="loading loading-spinner loading-xs"></span>}
         </ListboxButton>
         <ListboxOptions transition className="w-full max-h-64 overflow-y-auto shadow-xl rounded absolute bg-white z-10 top-12 border border-neutral-200 origin-top transition duration-200 ease-out data-[closed]:scale-95 data-[closed]:opacity-0">
-            {cleanOptions.map((person) => <UserOption data={person} isSelected={checkSelected(person.email)} key={person.id}/>)}
+            {!loading && cleanOptions.map((person) => <UserOption data={person} isSelected={checkSelected(person.email)} key={person.id}/>)}
         </ListboxOptions>
     </Listbox>
       

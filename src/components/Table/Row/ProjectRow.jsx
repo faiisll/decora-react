@@ -7,7 +7,7 @@ import moment from 'moment'
 import { TbEye, TbTrashX } from "react-icons/tb";
 import { useNavigate } from 'react-router'
 
-export default function ProjectRow({project, index = 0}) {
+export default function ProjectRow({project, index = 0, onDelete = () => {}}) {
     const parseDateJoin = (date) => {
         return moment(date).format("Do MMM, YYYY")
     }
@@ -39,7 +39,7 @@ export default function ProjectRow({project, index = 0}) {
                 <Cell className="font-medium">
                     <div className='flex gap-4'>
                         <button className="btn btn-soft btn-success btn-circle" onClick={() => {toProject(project.id)}}><TbEye className='text-lg' /></button>
-                        <button className="btn btn-soft btn-error btn-circle"><TbTrashX className='text-lg' /></button>
+                        <button className="btn btn-soft btn-error btn-circle" onClick={() => {onDelete(project)}}><TbTrashX className='text-lg' /></button>
 
                     </div>
                 </Cell>

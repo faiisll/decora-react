@@ -24,7 +24,7 @@ const ProjectDetailInfo = ({status = "Ongoing", startDate = "21/02/2025", endDat
                     <TbCalendarMonth className='text-2xl' />
                 </div>
                 <div className="stat-title">Start At</div>
-                <div className="stat-value text-2xl">{parseDateJoin(startDate)}</div>
+                <div className="stat-value text-xl">{parseDateJoin(startDate)}</div>
             </div>
 
             <div className="stat">
@@ -32,7 +32,7 @@ const ProjectDetailInfo = ({status = "Ongoing", startDate = "21/02/2025", endDat
                     <TbCalendarMonth className='text-2xl' />
                 </div>
                 <div className="stat-title">Due Date</div>
-                <div className="stat-value text-2xl">{parseDateJoin(endDate)}</div>
+                <div className="stat-value text-xl">{parseDateJoin(endDate)}</div>
             </div>
             </div>
     );

@@ -29,14 +29,14 @@ export default function ProjectDetail() {
             <TeamSection teams={data.data.teams} />
           </div>
           <div className='w-full'>
-          <div className="tabs tabs-box w-fit">
+          <div className="flex justify-center bg-gray-100 rounded-lg py-1">
             <input 
             type="radio" 
             checked={tab === 'phase'} 
             onChange={(e) => (setTab(e.target.value))}  
             name="team_tab" 
             value="phase" 
-            className="tab" 
+            className={clsx(tab === 'phase' && "bg-white rounded-lg shadow", "tab")} 
             aria-label="Phase & Task"/>
             <input 
             type="radio" 
@@ -44,7 +44,7 @@ export default function ProjectDetail() {
             onChange={(e) => (setTab(e.target.value))} 
             name="team_tab" 
             value="timeline" 
-            className="tab" 
+            className={clsx(tab === 'timeline' && "bg-white rounded-lg shadow", "tab")}  
             aria-label="Timeline"  />
           </div>
           </div>

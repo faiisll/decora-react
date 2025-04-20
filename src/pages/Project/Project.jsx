@@ -4,7 +4,9 @@ import { TbList, TbLayoutGrid, TbCategoryPlus } from "react-icons/tb";
 import { HiMiniPlus } from "react-icons/hi2";
 import ListCompactProjects from '../../components/List/ListCompactProjects';
 import { useNavigate, useSearchParams } from 'react-router';
-import { useGetProjectQuery } from '../../store/apis/projectApi';
+import { useDeleteProjectMutation, useGetProjectQuery } from '../../store/apis/projectApi';
+import DialogConfirm from '../../components/Dialog/DialogConfirm';
+import createToast from '../../components/toast/Toast';
 
 
 export default function Project() {
@@ -13,6 +15,9 @@ export default function Project() {
   const [view, setView] = useState('table')
   const views = ['table', 'card']
   const {data, refetch} = useGetProjectQuery()
+  const [deleteProject, {}] = useDeleteProjectMutation()
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [dataDelete, setDataDelete] = useState(null)
 
   const handleParams = () => {
     const viewParam = searchParams.get('view')
@@ -25,6 +30,32 @@ export default function Project() {
       setView(viewParam)
     }
     
+  }
+
+  const handleConfirm = (project) => {
+    
+    setConfirmOpen(true)
+    setDataDelete(project)
+
+  }
+
+  const handleDelete = () => {
+    deleteProject(dataDelete.id).unwrap().then(() => {
+      createToast({
+        message: "Project has been deleted",
+        type: "success"
+        
+      })
+
+      setConfirmOpen(false)
+    }).catch(err => {
+      createToast({
+        message: err.data.message,
+        type: "error"
+      })
+      
+    })
+
   }
 
   const handleTab = (val = 'table') => {
@@ -40,6 +71,14 @@ export default function Project() {
 
   return (
     <div className='w-full flex flex-col h-full gap-8'>
+      <DialogConfirm
+      open={confirmOpen}
+      onChange={setConfirmOpen}
+      onConfirm={handleDelete}
+      confirmClass='btn-soft btn-error'
+      confirmText='Yes, delete'
+      description='Once it’s gone, it’s gone for good. Are you sure you want to say goodbye to this project?'
+      title='Oops, You’re About to Delete This Project!' />
       <div className='flex justify-between'>
         <div>
           <h1 className='font-medium text-lg'>Project List</h1>
@@ -63,7 +102,7 @@ export default function Project() {
 
         </div>
       </div>
-      {view === 'table' ? <TableProject data={data ? data.data : []} /> : <ListCompactProjects data={data ? data.data : []} />}
+      {view === 'table' ? <TableProject data={data ? data.data : []} onDelete={handleConfirm} /> : <ListCompactProjects data={data ? data.data : []} />}
       <h1>Project</h1>
     </div>
   )

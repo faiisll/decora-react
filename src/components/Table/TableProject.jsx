@@ -4,7 +4,7 @@ import CellHead from './Cell/CellHead'
 import ProjectRow from './Row/ProjectRow'
 
 const headers = ["No.", "Name", "Status", "Leader", "Due Date", ""]
-export default function TableProject({data = [], loading = false}) {
+export default function TableProject({data = [], loading = false, onDelete = () => {}}) {
   return (
     <div className="overflow-x-auto grow max-h-[80vh]">
       <div className="overflow-x-auto bg-neutral-50 rounded-lg">
@@ -18,7 +18,7 @@ export default function TableProject({data = [], loading = false}) {
           </thead>
           <tbody className=" divide-y divide-gray-200">
                 {!loading && data.map((project, index) => (
-                  <ProjectRow index={index} project={project} key={index} />
+                  <ProjectRow index={index} project={project} key={index} onDelete={onDelete} />
                 ))}
           </tbody>
         </table>

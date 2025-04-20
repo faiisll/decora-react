@@ -10,23 +10,25 @@ const templates = [
         id: 1,
         name: "Blank",
         description: "Start project from scratch.",
-        icon: TbBorderNone
+        icon: TbBorderNone,
+        value: ""
     },
     {
         id: 2,
         name: "Interior",
         description: "Use interior design project phases.",
-        icon: TbContract
+        icon: TbContract,
+        value: "interior"
     },
 ]
-const SelectTemplateProject = () => {
-    let [selected, setSelected] = useState(templates[0].name)
+const SelectTemplateProject = ({value = "", onChnage = () => {}}) => {
+    let [selected, setSelected] = useState(templates[0].value)
 
 
     return (
-      <RadioGroup value={selected} onChange={setSelected} aria-label="Project template" as='div' className="flex md:flex-row flex-col gap-2 w-full">
+      <RadioGroup value={value} onChange={onChnage} aria-label="Project template" as='div' className="flex md:flex-row flex-col gap-2 w-full">
         {templates.map((template) => (
-            <Radio value={template.name} key={template.id} className="h-full w-full md:w-1/2">
+            <Radio value={template.value} key={template.id} className="h-full w-full md:w-1/2">
                 {({checked}) => (
                     <CardProjectTemplate checked={checked} template={template} />
                 )}

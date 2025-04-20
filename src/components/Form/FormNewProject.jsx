@@ -7,14 +7,23 @@ import { Formik, Form } from 'formik';
 import * as Yup from "yup"
 import Input from '../inputs/Input';
 import clsx from 'clsx';
+import { useNavigate } from 'react-router';
+import { useGetTeamsQuery } from '../../store/apis/teamApi';
+import { useCreateProjectMutation } from '../../store/apis/projectApi';
+import createToast from '../toast/Toast';
+import moment from 'moment';
 
 const FormNewProject = () => {
+  const {data:dataTeam, isLoading:loadingTeam, isError:errorTeam, refetch} = useGetTeamsQuery()
+  const [createProject, {isLoading:loadingCreate}] = useCreateProjectMutation()
+  const navigate = useNavigate()
   const initialValues = {
     name: "",
     description: "",
     lead: "",
     teams: [],
     timeline: [null, null],
+    template: ""
   }
 
   const validationSchema = Yup.object({
@@ -24,11 +33,32 @@ const FormNewProject = () => {
     teams: Yup.array().required(),
     timeline: Yup.array().test("not nuull", "Timeline project is required.", (val) => {
       return val.every(v => Boolean(v))
-    })
+    }),
+    template: Yup.string()
   })
 
   const handleSubmit = (values, actions) => {
-    console.log(values)
+    const body = {...values}
+    body.startDate = moment(values.timeline[0], "DD-M-YYYY").format()
+    body.endDate = moment(values.timeline[1], "DD-M-YYYY").format()
+    body.teams = values.teams.join(",")
+
+    createProject(body).unwrap().then((res) => {
+      createToast({
+        message: "Project successfully created",
+        type: "success"
+      })
+      navigate("/project")
+    }).catch(err => {
+      createToast({
+        message: err.data.message,
+        type: "error"
+      })
+    })
+
+    
+    
+    
 
   }
 
@@ -65,9 +95,9 @@ const FormNewProject = () => {
                 id="projectLead"
                 className={clsx("select select-bordered w-full" , touched["lead"] && errors["lead"] ? 'select-error' : '')}>
                   <option value="" disabled>Select a project lead</option>
-                  <option value="lead1">Lead 1</option>
-                  <option value="lead2">Lead 2</option>
-                  <option value="lead3">Lead 3</option>
+                  {!loadingTeam && dataTeam.data.map(person => (
+                    <option className='font-poppins' key={person.email} value={person.email}>{person.name}</option>
+                  ))}
                 </select>
                 {touched["lead"] && errors["lead"] ? (<p className="validator-hint text-red-500 mt-1">{errors["lead"]}</p>) : null}
               </div>
@@ -75,26 +105,26 @@ const FormNewProject = () => {
               {/* Team Members */}
               <div className="mb-4">
                 <label htmlFor="teamMembers" className="block text-sm font-medium mb-2">Team Members</label>
-                <MultiSelectUser value={values.teams} onChange={(e) => {setFieldValue("teams", e)}}  />
+                <MultiSelectUser options={dataTeam ? dataTeam.data : []} loading={loadingTeam} value={values.teams} onChange={(e) => {setFieldValue("teams", e)}}  />
               </div>
 
               {/* Start Date */}
 
               <div className='flex flex-col mb-4'>
                 <label htmlFor="startDate" className="block text-sm font-medium mb-2">Timeline</label>
-                <DatePicker multiple value={values.timeline} onChange={(e) => {setFieldValue('timeline', e)}} />
+                <DatePicker showToggle={false} multiple value={values.timeline} onChange={(e) => {setFieldValue('timeline', e)}} />
                 {touched["timeline"] && errors["timeline"] ? (<p className="validator-hint text-red-500 mt-1">{errors["timeline"]}</p>) : null}
               </div>
               
               <div className='mb-4'>
                 <label htmlFor="projectTemplate" className="block text-sm font-medium mb-2">Project Template</label>
-                <SelectTemplateProject />
+                <SelectTemplateProject value={values.template} onChnage={(e) => {setFieldValue("template", e)}} />
               </div>
               
 
               {/* Action Buttons */}
               <div className="flex justify-end gap-4 mt-6">
-                <button type="reset" className="btn btn-ghost">Cancel</button>
+                <button type="reset" className="btn btn-ghost" onClick={() => {navigate("/project")}}>Cancel</button>
                 <button type="submit" className="btn btn-neutral">Save</button>
               </div>
             {/* Project Name */}
