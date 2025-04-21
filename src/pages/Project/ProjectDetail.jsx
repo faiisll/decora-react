@@ -6,6 +6,7 @@ import ChatSection from '../../components/Project/ChatSection';
 import ProjectDetailInfo from '../../components/Project/ProjectDetailInfo';
 import { useGetProjectByIdQuery } from '../../store/apis/projectApi';
 import { useParams } from 'react-router';
+import TabAnimate from '../../components/Tab/TabAnimate';
 
 export default function ProjectDetail() {
   const [tab, setTab] = useState("phase")
@@ -29,23 +30,13 @@ export default function ProjectDetail() {
             <TeamSection teams={data.data.teams} />
           </div>
           <div className='w-full'>
-          <div className="flex justify-center bg-gray-100 rounded-lg py-1">
-            <input 
-            type="radio" 
-            checked={tab === 'phase'} 
-            onChange={(e) => (setTab(e.target.value))}  
-            name="team_tab" 
-            value="phase" 
-            className={clsx(tab === 'phase' && "bg-white rounded-lg shadow", "tab")} 
-            aria-label="Phase & Task"/>
-            <input 
-            type="radio" 
-            checked={tab === 'timeline'} 
-            onChange={(e) => (setTab(e.target.value))} 
-            name="team_tab" 
-            value="timeline" 
-            className={clsx(tab === 'timeline' && "bg-white rounded-lg shadow", "tab")}  
-            aria-label="Timeline"  />
+          <div className="flex justify-center bg-gray-100 rounded-lg p-1 w-fit">
+            <div
+            onClick={() => (setTab("phase"))} 
+            className={clsx(tab === 'phase' && "bg-white rounded-lg shadow", "text-sm p-2 cursor-pointer")}>Phase & task</div>
+            <div
+            onClick={() => (setTab("timeline"))} 
+            className={clsx(tab === 'timeline' && "bg-white rounded-lg shadow", "text-sm p-2 cursor-pointer")}>Timeline</div>
           </div>
           </div>
           {tab === "phase" ? <div className="md:col-span-5 col-span-1 flex flex-col gap-4">
