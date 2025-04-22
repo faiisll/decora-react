@@ -2,9 +2,13 @@ import clsx from 'clsx';
 import React from 'react';
 import TeamAvatar from './TeamAvatar';
 import ProjectStatus from '../Status/ProjectStatus';
+import moment from 'moment';
 
 const TaskItem = ({task, ...props}) => {
     const titleClass = "text-sm text-neutral-500"
+    const parseDateJoin = (date) => {
+        return moment(date).format("DD/MM/YYYY")
+    }
     return (
         <div {...props} className='w-full cursor-pointer flex flex-col bg-gray-100 rounded-xl px-4 sm:px-8 py-6 gap-4 sm:flex-row sm:justify-between sm:items-center'>
             <div className='flex flex-col sm:grow sm:w-1/2'>
@@ -19,7 +23,7 @@ const TaskItem = ({task, ...props}) => {
                 </div>
                 <div className='flex flex-col'>
                     <span className={clsx(titleClass)}>Due Date</span>
-                    <h4>{task.endDate}</h4>
+                    <h4>{parseDateJoin(task.dueDate)}</h4>
                 </div>
                 <div className='flex flex-col items-center sm:items-start'>
                     <span className={clsx(titleClass)}>Assignee</span>

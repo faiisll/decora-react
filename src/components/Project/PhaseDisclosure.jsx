@@ -39,6 +39,15 @@ const PhaseDisclosure = ({
                     exit={{ opacity: 0, height: 0, transition: {delay: (tasks.length * 0.15)+0.15} }}
                     transition={{ duration: 0.2}}
                     className='w-full'>
+                      {!tasks.length && <motion.div
+                      layout
+                      initial={{ opacity: 0, y: -5, x: -24 }}
+                      animate={{ opacity: 1, y: 0, x: 0 }}
+                      exit={{ opacity: 0, y: -20, x: -24, transition: {duration: 0.15, ease: easeOut} }}
+                      transition={{ duration: 0.15, ease: easeOut, }}
+                      className="origin-top mt-2 pl-4 text-neutral-500">
+                        {phase.name} is empty.
+                      </motion.div>}
                       {tasks.map((task, index) => (
                         <motion.div
                         layout

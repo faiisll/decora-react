@@ -1,21 +1,46 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import PhasesSection from '../../components/Project/PhasesSection';
 import TeamSection from '../../components/Project/TeamSection';
 import ChatSection from '../../components/Project/ChatSection';
 import ProjectDetailInfo from '../../components/Project/ProjectDetailInfo';
-import { useGetProjectByIdQuery } from '../../store/apis/projectApi';
+import { useGetPhasesQuery, useGetProjectByIdQuery, useGetTasksQuery } from '../../store/apis/projectApi';
 import { useParams } from 'react-router';
-import TabAnimate from '../../components/Tab/TabAnimate';
+import { cloneDeep } from 'lodash';
 
 export default function ProjectDetail() {
   const [tab, setTab] = useState("phase")
   let { id } = useParams();
   const {data, isLoading, refetch} = useGetProjectByIdQuery(id)
+  const {data:phases, isLoading: loadingPhase, refetch: refetchPhase} = useGetPhasesQuery(id)
+  const {data:tasks, isLoading: loadingTask, refetch: refetchTask} = useGetTasksQuery(id)
+
+  useEffect(() => {
+    refetchPhase()
+    refetchTask()
+  }, [])
+
+  const phasesNTasks = useMemo(() => {
+    if(loadingPhase || loadingTask || isLoading) return []
+    if(!phases || !tasks) return []
+
+
+    const copyPhases = cloneDeep(phases.data)
+
+    return copyPhases.map(phase => {
+      phase.tasks = tasks.data.filter(task => task.phaseId === phase.id)
+      phase.status = phase.tasks.filter(task => task.status === "Completed").length ? "Completed" : "Ongoing"
+      phase.status = phase.tasks.length ? phase.status : "Setup"
+      return phase
+    })
+    
+
+  }, [phases, tasks])
 
   return (
     data && !isLoading ? <div className="pt-8 space-y-8 w-full pb-10">
       <div className="grid md:grid-cols-5 md:grid-rows-1 grid-rows-1 gap-4 grid-cols-1">
+
           <div className='col-span-1 md:col-span-3 flex flex-col gap-4'>
             <div className='flex flex-col'>
               <h2 className='text-2xl font-semibold'>{data.data.name}</h2>
@@ -33,14 +58,14 @@ export default function ProjectDetail() {
           <div className="flex justify-center bg-gray-100 rounded-lg p-1 w-fit">
             <div
             onClick={() => (setTab("phase"))} 
-            className={clsx(tab === 'phase' && "bg-white rounded-lg shadow", "text-sm p-2 cursor-pointer")}>Phase & task</div>
+            className={clsx(tab === 'phase' && "bg-white rounded-lg shadow", "text-sm p-2 cursor-pointer text-nowrap")}>Phase & task</div>
             <div
             onClick={() => (setTab("timeline"))} 
             className={clsx(tab === 'timeline' && "bg-white rounded-lg shadow", "text-sm p-2 cursor-pointer")}>Timeline</div>
           </div>
           </div>
           {tab === "phase" ? <div className="md:col-span-5 col-span-1 flex flex-col gap-4">
-            <PhasesSection />
+            <PhasesSection phases={phasesNTasks} projectId={id} />
           </div> : <div className="md:col-span-5 col-span-1 flex flex-col gap-4">timeline</div>}
       </div>
     </div> : ""

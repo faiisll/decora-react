@@ -43,7 +43,7 @@ const phasesDummy = [
   },
 ];
 
-export default function PhasesSection({phases = []}) {
+export default function PhasesSection({phases = [], projectId = null}) {
   const [isDialogPhaseOpen,setIsDialogPhaseOpen] = useState(false)
   const [isDialogTaskOpen,setIsDialogTaskOpen] = useState(false)
   const [isDialogTaskDetailOpen,setIsDialogTaskDetailOpen] = useState(false)
@@ -62,8 +62,8 @@ export default function PhasesSection({phases = []}) {
 
   return (
       <div className="w-full flex flex-col gap-4">
-        <DialogPhase id="dialog-phase" open={isDialogPhaseOpen} onChange={setIsDialogPhaseOpen} />
-        <DialogCreateTask open={isDialogTaskOpen} onChange={setIsDialogTaskOpen} />
+        <DialogPhase projectId={projectId} id="dialog-phase" open={isDialogPhaseOpen} onChange={setIsDialogPhaseOpen} />
+        <DialogCreateTask projectId={projectId} phases={phases} open={isDialogTaskOpen} onChange={setIsDialogTaskOpen} />
         <DialogDetailTask open={isDialogTaskDetailOpen} onChange={setIsDialogTaskDetailOpen} task={selectedTask} />
         {phases.length > 0 && <div className='flex justify-between items-center'>
           <h3 className='text-lg font-semibold'>Phase list</h3>

@@ -5,7 +5,7 @@ import moment from 'moment';
 
 const ProjectDetailInfo = ({status = "Ongoing", startDate = "21/02/2025", endDate ="21/02/2025"}) => {
     const parseDateJoin = (date) => {
-        return moment(date).format("Do MMM, YYYY")
+        return moment(date).format("D MMM, YYYY")
     }
     return (
         <div className="stats stats-vertical md:stats-horizontal w-full bg-gray-100 rounded-2xl">
@@ -24,7 +24,7 @@ const ProjectDetailInfo = ({status = "Ongoing", startDate = "21/02/2025", endDat
                     <TbCalendarMonth className='text-2xl' />
                 </div>
                 <div className="stat-title">Start At</div>
-                <div className="stat-value text-xl">{parseDateJoin(startDate)}</div>
+                <div className="stat-value text-2xl">{parseDateJoin(startDate)}</div>
             </div>
 
             <div className="stat">
@@ -32,7 +32,7 @@ const ProjectDetailInfo = ({status = "Ongoing", startDate = "21/02/2025", endDat
                     <TbCalendarMonth className='text-2xl' />
                 </div>
                 <div className="stat-title">Due Date</div>
-                <div className="stat-value text-xl">{parseDateJoin(endDate)}</div>
+                <div className="stat-value text-2xl">{parseDateJoin(endDate)}</div>
             </div>
             </div>
     );
