@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import clsx from 'clsx';
+import socketClient from '../../socket/socketClient';
 
 const messages = [
   {
@@ -14,12 +15,33 @@ const messages = [
   },
 ];
 
-export default function ChatSection() {
+export default function ChatSection({projectId}) {
+
+  useEffect(() => {
+    socketClient.connect()
+    socketClient.on('connect', () => {
+      console.log('Connected to server')
+    })
+
+    socketClient.on('message', (data) => {
+      console.log('Received from server:', data)
+    })
+
+    socketClient.emit("joinRoom", projectId)
+
+
+    return () => {
+      socketClient.disconnect()
+      return
+    }
+  }, [])
   const [message, setMessage] = useState('');
   const [showNewMessageModal, setShowNewMessageModal] = useState(false);
 
   const handleSendMessage = () => {
     // Send message logic here
+
+    
     setMessage('');
   };
 
@@ -27,12 +49,6 @@ export default function ChatSection() {
     <div className="bg-white rounded-lg shadow-lg p-6">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold text-gray-800">Project Chat</h2>
-        <button
-          className="btn btn-sm btn-primary"
-          onClick={() => setShowNewMessageModal(true)}
-        >
-          New Message
-        </button>
       </div>
       <div className="space-y-4">
         <div className="flex flex-col space-y-2">

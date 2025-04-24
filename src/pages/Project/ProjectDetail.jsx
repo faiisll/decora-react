@@ -7,6 +7,7 @@ import ProjectDetailInfo from '../../components/Project/ProjectDetailInfo';
 import { useGetPhasesQuery, useGetProjectByIdQuery, useGetTasksQuery } from '../../store/apis/projectApi';
 import { useParams } from 'react-router';
 import { cloneDeep } from 'lodash';
+import TimelineSection from '../../components/Project/TimelineSection';
 
 export default function ProjectDetail() {
   const [tab, setTab] = useState("phase")
@@ -60,13 +61,13 @@ export default function ProjectDetail() {
             onClick={() => (setTab("phase"))} 
             className={clsx(tab === 'phase' && "bg-white rounded-lg shadow", "text-sm p-2 cursor-pointer text-nowrap")}>Phase & task</div>
             <div
-            onClick={() => (setTab("timeline"))} 
-            className={clsx(tab === 'timeline' && "bg-white rounded-lg shadow", "text-sm p-2 cursor-pointer")}>Timeline</div>
+            onClick={() => (setTab("chat"))} 
+            className={clsx(tab === 'chat' && "bg-white rounded-lg shadow", "text-sm p-2 cursor-pointer")}>Chat</div>
           </div>
           </div>
           {tab === "phase" ? <div className="md:col-span-5 col-span-1 flex flex-col gap-4">
             <PhasesSection phases={phasesNTasks} projectId={id} />
-          </div> : <div className="md:col-span-5 col-span-1 flex flex-col gap-4">timeline</div>}
+          </div> : <div className="md:col-span-5 col-span-1 flex flex-col gap-4 w-full"><ChatSection projectId={id} /></div>}
       </div>
     </div> : ""
   );
