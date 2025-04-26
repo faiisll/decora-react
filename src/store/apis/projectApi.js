@@ -39,6 +39,9 @@ import baseQuery from './setupApi';
         getTasks: builder.query({
           query: (projectId) => ({url: `/project/${projectId}/tasks`, method: "GET"}),
           providesTags: ["Tasks"]
+        }),
+        getChats: builder.query({
+          query: (projectId) => ({url: `/project/${projectId}/chats`, method: "GET"}),
         })
     }),
   });
@@ -51,6 +54,7 @@ import baseQuery from './setupApi';
     useGetPhasesQuery,
     useGetTasksQuery,
     useCreatePhaseMutation,
-    useCreateTaskMutation
+    useCreateTaskMutation,
+    useGetChatsQuery
   } = projectApi;
   

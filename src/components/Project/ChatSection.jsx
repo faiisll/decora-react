@@ -1,126 +1,117 @@
-import { useEffect, useState } from 'react';
-import clsx from 'clsx';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import socketClient from '../../socket/socketClient';
+import { useGetChatsQuery } from '../../store/apis/projectApi';
+import ChatBubble from '../Chat/ChatBubble';
 
-const messages = [
-  {
-    content: "Let's discuss the timeline for the living room renovation.",
-    sender: "self",
-    timestamp: "10:30 AM",
-  },
-  {
-    content: "I'll check the availability of the materials.",
-    sender: "other",
-    timestamp: "10:32 AM",
-  },
-];
 
-export default function ChatSection({projectId}) {
+export default function ChatSection({projectId, user}) {
+  const chatContainerRef = useRef(null);
+  const {data: chatDatas, isLoading, refetch} = useGetChatsQuery(projectId)
+  const [message, setMessage] = useState('');
+  const [showNewMessageModal, setShowNewMessageModal] = useState(false);
+  const [messages, setMessages] = useState([])
+  const onMessage = (data) => {
+    
 
-  useEffect(() => {
+  }
+
+  const allMessages = useMemo(() => {
+
+    if(!chatDatas || isLoading) return []
+
+    return [...chatDatas.data, ...messages]
+
+  }, [chatDatas, messages])
+
+  const handleSendMessage = (e) => {
+    // Send message logic here
+
+    e.preventDefault()
+    const room = 'room-'+projectId
+    const dataSend = {room, projectId, createdAt: Date.now(), message, from: user, by: user.id}
+    socketClient.emit('message', dataSend)
+
+    setMessages((oldMessages) => [...oldMessages, dataSend])
+    
+    setMessage('');
+  };
+
+
+  const handleSocket = () => {
     socketClient.connect()
     socketClient.on('connect', () => {
       console.log('Connected to server')
     })
 
-    socketClient.on('message', (data) => {
-      console.log('Received from server:', data)
+    socketClient.emit('joinRoom', projectId)
+
+    socketClient.on('joinedRoom', (data) => {
+      console.log(data.message); // Output: "Joined room: room-12345"
     })
 
-    socketClient.emit("joinRoom", projectId)
+    socketClient.on('message', (data) => {
+      setMessages((oldMessages) => [...oldMessages, data])
+    })
 
+  }
+  
+  useEffect(() => {
+    refetch()
+    handleSocket()
 
     return () => {
+      socketClient.emit('leaveRoom', projectId)
       socketClient.disconnect()
       return
     }
   }, [])
-  const [message, setMessage] = useState('');
-  const [showNewMessageModal, setShowNewMessageModal] = useState(false);
 
-  const handleSendMessage = () => {
-    // Send message logic here
-
-    
-    setMessage('');
-  };
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [allMessages]); // This effect will run whenever `allMessages` changes
+  
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-gray-800">Project Chat</h2>
-      </div>
+    <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
       <div className="space-y-4">
-        <div className="flex flex-col space-y-2">
-          {messages.map((msg, idx) => (
-            <div key={idx} className={clsx(
-              'flex items-end',
-              msg.sender === 'self' ? 'justify-end' : ''
-            )}>
-              <div className={clsx(
-                'px-4 py-2 rounded-lg max-w-xs',
-                msg.sender === 'self'
-                  ? 'bg-primary text-white rounded-br-none'
-                  : 'bg-gray-100 rounded-bl-none'
-              )}>
-                <p className="text-sm">{msg.content}</p>
-                <p className="text-xs text-gray-500 mt-1">{msg.timestamp}</p>
-              </div>
-            </div>
-          ))}
+        <div className="flex flex-col space-y-2 h-[40vh] overflow-y-auto" ref={chatContainerRef}>
+
+        {allMessages.map((chat, index) => (
+          <ChatBubble 
+          key={index} 
+          name={chat.from.name} 
+          createdAt={chat.createdAt}
+          message={chat.message}
+          role={chat.from.role}
+          roleTag={chat.from.roleTag}
+          isSelf={chat.by === user.id} />
+        ))}
+
         </div>
         <div className="mt-6">
           <div className="flex space-x-2">
-            <input
-              type="text"
-              placeholder="Type a message..."
-              className="input input-bordered flex-1"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-            />
-            <button
-              className="btn btn-primary"
-              onClick={handleSendMessage}
-              disabled={!message.trim()}
-            >
-              Send
-            </button>
+                <form onSubmit={handleSendMessage} className="flex space-x-2 w-full">
+                  <input
+                    type="text"
+                    placeholder="Type a message..."
+                    className="input input-bordered flex-1"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                  />
+                  <button
+                    type='submit'
+                    className="btn btn-primary"
+                    disabled={!message.trim()}
+                  >
+                    Send
+                  </button>
+                  
+                </form>
           </div>
         </div>
       </div>
-
-      {showNewMessageModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h3 className="text-lg font-semibold mb-4">New Message</h3>
-            <div className="flex flex-col space-y-4">
-              <input
-                type="text"
-                placeholder="Subject"
-                className="input input-bordered"
-              />
-              <textarea
-                placeholder="Message"
-                className="textarea textarea-bordered h-32"
-              />
-              <div className="flex justify-end space-x-2">
-                <button
-                  className="btn btn-sm"
-                  onClick={() => setShowNewMessageModal(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="btn btn-sm btn-primary"
-                  onClick={() => handleSendMessage()}
-                >
-                  Send
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

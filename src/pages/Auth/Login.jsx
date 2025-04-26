@@ -22,12 +22,10 @@ const Login = () => {
     })
 
     const handleSubmit = async (values, { setSubmitting }) => {
-
         try{
             login(values).unwrap().then(res => {
 
             }).catch(err => {
-                console.log(err.data);
                 if(err.status >= 400){
                     createToast({
                         type: "error",
@@ -35,7 +33,6 @@ const Login = () => {
                     })
                     
                 }
-                console.log(err);
             })
 
             // console.log(res);

@@ -5,7 +5,7 @@ import TeamAvatar from '../../Project/TeamAvatar';
 import Cell from '../Cell/Cell';
 
 
-const RowTeam = ({user, index}) => {
+const RowTeam = ({user, index, isOnline = false}) => {
     const parseDateJoin = (date) => {
         return moment(date).format("Do MMM, YYYY")
     }
@@ -15,12 +15,21 @@ const RowTeam = ({user, index}) => {
                 {index+1}
             </Cell>
             <Cell className="text-gray-900 font-medium">
-                <div className='flex gap-3 items-center'>
-                    <div className='w-8 h-8 aspect-square'>
-                        <TeamAvatar useTooltip={false} name={user.name ? user.name : user.email} />
-                    </div>
+                <div className='flex items-center gap-4'>
+                    <div className='flex gap-3 items-center'>
+                        <div className='w-8 h-8 aspect-square'>
+                            <TeamAvatar useTooltip={false} name={user.name ? user.name : user.email} />
+                        </div>
 
-                    <span>{user.name ? user.name : user.email}</span>
+                        <span>{user.name ? user.name : user.email}</span>
+
+                    </div>
+                    
+                    {isOnline && (
+                        <div className="tooltip" data-tip={`${user.name} is online now`}>
+                            <div aria-label="success" className="status status-success"></div>
+                        </div>
+                    )}
 
                 </div>
             </Cell>

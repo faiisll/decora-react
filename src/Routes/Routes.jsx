@@ -15,17 +15,41 @@ import ProjectDetail from '../pages/Project/ProjectDetail';
 import NewProject from '../pages/Project/NewProject';
 import Invitation from '../pages/Auth/Invitation';
 import { setAuth } from '../store/authSlice';
+import { setUserOnline } from '../store/teamSlice';
 import { useGetUserMutation } from '../store/apis/authApi';
 import FullScreenLoader from '../components/Loading/FullscreenLoader';
+import socketClient from '../socket/socketClient';
+import { isEqual } from 'lodash';
 const AllRoutes = () => {
     const location = useLocation();
     let isAuth = useSelector((state) => state.auth.isAuth)
+    let usersOnline = useSelector((state) => state.team.usersOnline)
     let userData = useSelector((state) => state.auth.dataUser)
     const dispatch = useDispatch()
     const [getUser, {isLoading, isSuccess}] = useGetUserMutation()
 
+    const handleOnline = () => {
+
+        socketClient.connect()
+  
+        socketClient.on('connect', () => {
+          socketClient.on('usersStatus', (data) => {
+            
+            if(!isEqual(usersOnline, data)){
+                dispatch(setUserOnline(data))
+            }
+          })
+          
+  
+          socketClient.emit('getUsersStatus')
+        })
+  
+    }
     useEffect(() => {
         let token = localStorage.getItem('token')
+        if(isAuth){
+            handleOnline()
+        }
         if(token){
             dispatch(setAuth(true))
         }
@@ -34,6 +58,28 @@ const AllRoutes = () => {
         }
 
     }, [])
+
+    useEffect(() => {
+        if(isAuth || userData){
+            socketClient.connect()
+  
+            socketClient.on('connect', () => {
+            socketClient.on('usersStatus', (data) => {
+                
+                
+                if(!isEqual(usersOnline, data)){
+                    dispatch(setUserOnline(data))
+                }
+            })
+            
+    
+            socketClient.emit('getUsersStatus')
+            })
+        }else{
+            socketClient.disconnect()
+        }
+
+    }, [isAuth, userData])
     return (
         <AnimatePresence >
             <Routes location={location} key={location.pathname}>

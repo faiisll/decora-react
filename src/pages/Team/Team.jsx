@@ -3,12 +3,14 @@ import TableTeams from '../../components/Table/TableTeams'
 import { TbUserPlus } from "react-icons/tb";
 import DialogInviteUser from '../../components/Dialog/DialogInviteUser';
 import { useGetTeamsQuery, useGetTeamsInvitationsQuery } from '../../store/apis/teamApi';
+import { useSelector } from 'react-redux';
 
 export default function Team() {
   const {data:dataTeam, isLoading:loadingTeam, isError:errorTeam, refetch} = useGetTeamsQuery()
   const {data:dataInvite, isLoading:loadingInvite, isError:errorInvite, refetch:refetchInvite} = useGetTeamsInvitationsQuery()
   const [tab, setTab] = useState("active")
   const [openInvite, setOpenInvite] = useState(false)
+  let usersOnline = useSelector((state) => state.team.usersOnline)
 
   useEffect(() => {
     refetch()
@@ -47,7 +49,7 @@ export default function Team() {
         aria-label="Pending"  />
       </div>
 
-        {tab === "active" ? <TableTeams data={dataTeam && dataTeam.data} loading={loadingTeam} /> :
+        {tab === "active" ? <TableTeams usersOnline={usersOnline} data={dataTeam && dataTeam.data} loading={loadingTeam} /> :
         <TableTeams data={dataInvite && dataInvite.data} />}
     </div>
   )

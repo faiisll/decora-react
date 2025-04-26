@@ -10,6 +10,4 @@ const socketClient = io(url, {
 
 })
 
-console.log(url)
-
 export default socketClient

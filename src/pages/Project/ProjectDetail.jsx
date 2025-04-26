@@ -8,8 +8,10 @@ import { useGetPhasesQuery, useGetProjectByIdQuery, useGetTasksQuery } from '../
 import { useParams } from 'react-router';
 import { cloneDeep } from 'lodash';
 import TimelineSection from '../../components/Project/TimelineSection';
+import { useSelector } from 'react-redux';
 
 export default function ProjectDetail() {
+  let userData = useSelector((state) => state.auth.dataUser)
   const [tab, setTab] = useState("phase")
   let { id } = useParams();
   const {data, isLoading, refetch} = useGetProjectByIdQuery(id)
@@ -65,9 +67,12 @@ export default function ProjectDetail() {
             className={clsx(tab === 'chat' && "bg-white rounded-lg shadow", "text-sm p-2 cursor-pointer")}>Chat</div>
           </div>
           </div>
-          {tab === "phase" ? <div className="md:col-span-5 col-span-1 flex flex-col gap-4">
+          {tab === "phase" && <div className="md:col-span-5 col-span-1 flex flex-col gap-4">
             <PhasesSection phases={phasesNTasks} projectId={id} />
-          </div> : <div className="md:col-span-5 col-span-1 flex flex-col gap-4 w-full"><ChatSection projectId={id} /></div>}
+          </div> }
+          {tab === "chat" && <div className="md:col-span-5 col-span-1 flex flex-col gap-4 w-full">
+            {userData && <ChatSection projectId={id} user={userData} />}
+          </div>}
       </div>
     </div> : ""
   );

@@ -4,9 +4,11 @@ import Navbar from '../../components/Navbar/Navbar';
 import { Outlet, useLocation, useNavigate, replace } from 'react-router';
 import { AnimatePresence, motion } from 'motion/react';
 import FullScreenLoader from '../../components/Loading/FullscreenLoader';
+import socketClient from '../../socket/socketClient';
+import { useSelector } from 'react-redux';
 
 const DashboardLayout = ({loading = false, user = null}) => {
-
+    let userData = useSelector((state) => state.auth.dataUser)
     const [scrolled, setScrolled] = useState(false);
     const container = useRef(null);
     const location = useLocation()
@@ -19,6 +21,9 @@ const DashboardLayout = ({loading = false, user = null}) => {
         setScrolled(false);
       }
     };
+
+    
+
     useEffect(() => {
       const element = container.current;
 
@@ -28,6 +33,7 @@ const DashboardLayout = ({loading = false, user = null}) => {
         navigate('/login', {replace: true})
       }
 
+  
       if(element){
         element.addEventListener('scroll', handleScroll);
     
@@ -36,6 +42,7 @@ const DashboardLayout = ({loading = false, user = null}) => {
         };
 
       }
+
     }, []);
 
     const pageVariants = {

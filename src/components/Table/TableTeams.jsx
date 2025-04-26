@@ -3,7 +3,7 @@ import RowTeam from './Row/RowTeam'
 import CellHead from './Cell/CellHead'
 
 const headers = ["No.", "Name", "Email", "Role", "Job Title", "Join At", ""]
-export default function TableTeams({data = [], loading}) {
+export default function TableTeams({data = [], loading, usersOnline = {}}) {
   return (
     <div className="overflow-x-auto grow max-h-[80vh]">
       <div className="overflow-x-auto bg-neutral-50 rounded-lg">
@@ -17,7 +17,7 @@ export default function TableTeams({data = [], loading}) {
           </thead>
           <tbody className=" divide-y divide-gray-200">
             {data.map((user, index) => (
-              <RowTeam user={user} key={index} index={index} />
+              <RowTeam user={user} key={index} index={index} isOnline={usersOnline.hasOwnProperty(user.id)} />
             ))}
           </tbody>
         </table>
