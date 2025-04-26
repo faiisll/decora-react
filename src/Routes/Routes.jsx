@@ -28,28 +28,9 @@ const AllRoutes = () => {
     const dispatch = useDispatch()
     const [getUser, {isLoading, isSuccess}] = useGetUserMutation()
 
-    const handleOnline = () => {
-
-        socketClient.connect()
-  
-        socketClient.on('connect', () => {
-          socketClient.on('usersStatus', (data) => {
-            
-            if(!isEqual(usersOnline, data)){
-                dispatch(setUserOnline(data))
-            }
-          })
-          
-  
-          socketClient.emit('getUsersStatus')
-        })
-  
-    }
     useEffect(() => {
         let token = localStorage.getItem('token')
-        if(isAuth){
-            handleOnline()
-        }
+
         if(token){
             dispatch(setAuth(true))
         }
@@ -58,28 +39,6 @@ const AllRoutes = () => {
         }
 
     }, [])
-
-    useEffect(() => {
-        if(isAuth || userData){
-            socketClient.connect()
-  
-            socketClient.on('connect', () => {
-            socketClient.on('usersStatus', (data) => {
-                
-                
-                if(!isEqual(usersOnline, data)){
-                    dispatch(setUserOnline(data))
-                }
-            })
-            
-    
-            socketClient.emit('getUsersStatus')
-            })
-        }else{
-            socketClient.disconnect()
-        }
-
-    }, [isAuth, userData])
     return (
         <AnimatePresence >
             <Routes location={location} key={location.pathname}>
