@@ -64,7 +64,7 @@ export default function PhasesSection({phases = [], projectId = null}) {
       <div className="w-full flex flex-col gap-4">
         <DialogPhase projectId={projectId} id="dialog-phase" open={isDialogPhaseOpen} onChange={setIsDialogPhaseOpen} />
         <DialogCreateTask projectId={projectId} phases={phases} open={isDialogTaskOpen} onChange={setIsDialogTaskOpen} />
-        <DialogDetailTask open={isDialogTaskDetailOpen} onChange={setIsDialogTaskDetailOpen} task={selectedTask} />
+        <DialogDetailTask projectId={projectId} open={isDialogTaskDetailOpen} onChange={setIsDialogTaskDetailOpen} task={selectedTask} />
         {phases.length > 0 && <div className='flex justify-between items-center'>
           <h3 className='text-lg font-semibold'>Phase list</h3>
           <div className='flex gap-1'>

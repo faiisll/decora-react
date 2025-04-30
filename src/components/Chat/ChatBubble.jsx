@@ -20,7 +20,7 @@ const ChatBubble = ({message = "", createdAt = Date.now(), isSelf = true, name =
 
         // Otherwise, format the full date like "25 Apr"
         else {
-            return dateMoment.format('DD MMM');
+            return dateMoment.format('HH:mm - DD MMM');
         }
     }
     return (

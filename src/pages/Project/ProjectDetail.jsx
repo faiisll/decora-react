@@ -32,7 +32,7 @@ export default function ProjectDetail() {
 
     return copyPhases.map(phase => {
       phase.tasks = tasks.data.filter(task => task.phaseId === phase.id)
-      phase.status = phase.tasks.filter(task => task.status === "Completed").length ? "Completed" : "Ongoing"
+      phase.status = phase.tasks.every(task => task.status === "Completed") ? "Completed" : "Ongoing"
       phase.status = phase.tasks.length ? phase.status : "Setup"
       return phase
     })

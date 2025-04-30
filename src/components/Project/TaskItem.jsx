@@ -16,14 +16,14 @@ const TaskItem = ({task, ...props}) => {
                 <h4 className='line-clamp-1 overflow-ellipsis'>{task.name}</h4>
             </div>
 
-            <div className='flex flex-col sm:flex-row gap-4 sm:gap-0 text-center sm:text-left w-full sm:w-sm sm:max-w-sm justify-between bg-gray-50 p-4 rounded'>
+            <div className='flex gap-4 sm:gap-0 text-center sm:text-left w-full sm:w-sm sm:max-w-sm justify-between bg-gray-50 p-4 rounded'>
                 <div className='flex flex-col justify-center items-center'>
                     <span className={clsx(titleClass)}>Status</span>
                     <ProjectStatus status={task.status} />
                 </div>
                 <div className='flex flex-col'>
                     <span className={clsx(titleClass)}>Due Date</span>
-                    <h4>{parseDateJoin(task.dueDate)}</h4>
+                    <h4 className='text-xs md:text-md'>{parseDateJoin(task.dueDate)}</h4>
                 </div>
                 <div className='flex flex-col items-center sm:items-start'>
                     <span className={clsx(titleClass)}>Assignee</span>

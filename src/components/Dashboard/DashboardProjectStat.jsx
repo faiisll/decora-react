@@ -1,6 +1,7 @@
 import React from 'react'
 import { TbBuildingCommunity, TbRulerMeasure, TbHomeCheck  } from "react-icons/tb";
-export default function DashboardProjectStat() {
+
+export default function DashboardProjectStat({data, loading}) {
   return (
     <div className="stats bg-gray-100 w-full">
         <div className="stat">
@@ -8,7 +9,9 @@ export default function DashboardProjectStat() {
                 <TbBuildingCommunity className='w-8 h-8' />
             </div>
             <div className="stat-title">Total Project</div>
-            <div className="stat-value">31</div>
+            <div className="stat-value">
+                {loading && !data ? <div className="skeleton h-8 bg-gray-200 w-10"></div> : data.total}
+            </div>
         </div>
 
         <div className="stat">
@@ -17,7 +20,9 @@ export default function DashboardProjectStat() {
 
             </div>
             <div className="stat-title">In Progress</div>
-            <div className="stat-value">8</div>
+            <div className="stat-value">
+                {loading && !data ? <div className="skeleton h-8 bg-gray-200 w-10"></div> : data.totalInprogress}
+            </div>
         </div>
 
         <div className="stat">
@@ -25,8 +30,10 @@ export default function DashboardProjectStat() {
                 <TbHomeCheck  className='w-8 h-8' />
             </div>
             <div className="stat-title">Completed</div>
-            <div className="stat-value">76</div>
+            <div className="stat-value">
+                {loading && !data ? <div className="skeleton h-8 bg-gray-200 w-10"></div> : data.totalCompleted}
+            </div>
         </div>
-        </div>
+    </div>
   )
 }

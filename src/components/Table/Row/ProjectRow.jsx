@@ -25,7 +25,10 @@ export default function ProjectRow({project, index = 0, onDelete = () => {}}) {
                     {index+1}
                 </Cell>
                 <Cell>
-                    {project.name}
+                    <span className='cursor-pointer' onClick={() => {toProject(project.id)}}>
+                        {project.name}
+
+                    </span>
                 </Cell>
                 <Cell>
                     <ProjectStatus status={project.status}/>

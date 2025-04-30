@@ -23,7 +23,7 @@ export default function Project() {
     const viewParam = searchParams.get('view')
 
     if(!searchParams.has('view') || !views.includes(viewParam)){
-      navigate('/project?view=table')
+      navigate('/project?view=table', {replace: true})
     }
 
     if(views.includes(viewParam)){

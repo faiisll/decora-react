@@ -11,8 +11,8 @@ const ProjectStatus = ({status ="",className, ...props}) => {
         'complete': "badge-success",
         'completed': "badge-success",
         'done': "badge-info",
-        'canceled': "badge-danger",
-        'rejected': "badge-danger",
+        'canceled': "badge-error",
+        'reject': "badge-error",
     }
     return (
         <div className={clsx("badge badge-soft", statusTheme[lowerStatus] ? statusTheme[lowerStatus] : "badge-neutral", className)} {...props}>
