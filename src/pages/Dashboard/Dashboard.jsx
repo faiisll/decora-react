@@ -7,10 +7,10 @@ import { useGetActivitiesQuery, useGetDashboardQuery, useGetProjectQuery } from 
 
 export default function Dashboard() {
   const {data: summary, isLoading: loadingSum, refetch} = useGetDashboardQuery()
-  const {data:projects, isLoading: loadingProject} = useGetProjectQuery(4, 1)
+  const {data:projects, isLoading: loadingProject} = useGetProjectQuery({limit:3, page:1})
   const {data:activities, isLoading: loadingActivity} = useGetActivitiesQuery()
   return (
-    <div className='w-full flex flex-col min-h-full overflow-y-auto gap-8 '>
+    <div className='w-full flex flex-col min-h-full gap-8 '>
       <div>
         <h1 className='font-medium text-lg'>Helo, Faisal Ayash</h1>
         <h2 className='text-sm text-gray-400'>Monitor your design project progress</h2>

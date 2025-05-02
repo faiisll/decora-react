@@ -14,10 +14,25 @@ export default function Project() {
   const navigate = useNavigate()
   const [view, setView] = useState('table')
   const views = ['table', 'card']
-  const {data, refetch} = useGetProjectQuery()
   const [deleteProject, {}] = useDeleteProjectMutation()
   const [confirmOpen, setConfirmOpen] = useState(false)
-  const [dataDelete, setDataDelete] = useState(null)
+  const [dataDelete, setDataDelete] = useState(null);
+  const [page, setPage] = useState(1);
+  const {data, refetch, isLoading} = useGetProjectQuery({limit: 10, page: page ? page : 1})
+
+  const nextPage = () => {
+    setPage(page+1)
+  }
+  const prevPage = () => {
+    if(page > 1){
+      setPage(page-1)
+    }
+  }
+
+  useEffect(() => {
+    refetch()
+  }, [page])
+  
 
   const handleParams = () => {
     const viewParam = searchParams.get('view')
@@ -103,7 +118,11 @@ export default function Project() {
         </div>
       </div>
       {view === 'table' ? <TableProject data={data ? data.data : []} onDelete={handleConfirm} /> : <ListCompactProjects data={data ? data.data : []} />}
-      <h1>Project</h1>
+      <div className="join">
+        <button disabled={isLoading || !data || page === 1} className="join-item btn" onClick={prevPage}>{"<"} Prev</button>
+        <button className="join-item btn">Page {page}</button>
+        <button disabled={isLoading || !data || page === data.last_page} className="join-item btn" onClick={nextPage}>Next {">"}</button>
+      </div>
     </div>
   )
 }

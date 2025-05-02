@@ -55,7 +55,7 @@ export default function ProjectDetail() {
             </div>
           </div>
           <div className='col-span-1 md:col-span-2'>
-            <TeamSection teams={data.data.teams} />
+            <TeamSection teams={data.data.teams} projectId={id} />
           </div>
           <div className='w-full'>
           <div className="flex justify-center bg-gray-100 rounded-lg p-1 w-fit">

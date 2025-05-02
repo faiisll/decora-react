@@ -13,13 +13,13 @@ const teamMembers = [
 ];
 
 
-export default function TeamSection({teams = teamMembers}) {
+export default function TeamSection({teams = teamMembers, projectId}) {
   const [isOpen, setIsOpen] = useState(false)
 
 
   return (
     <div className='w-full h-full max-h-64 rounded-3xl bg-gray-100 overflow-hidden px-6 py-5 flex flex-col'>
-      <DialogProjectTeam open={isOpen} onChange={setIsOpen} teams={teams} />
+      <DialogProjectTeam projectId={projectId} open={isOpen} onChange={setIsOpen} teams={teams} />
       <div className='flex w-full justify-between'>
         <div className='flex items-center'>
           <span className='font-semibold'>Members</span>

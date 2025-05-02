@@ -21,7 +21,7 @@ export default function CardActivity({activity}) {
                 {activity && <p className='text-sm line-clamp-2'>{activity.message}</p>}
 
                 {activity && activity.file && <div className='flex px-2 mt-2 bg-neutral-50 py-2 gap-4 items-center w-fit rounded-xl text-xs cursor-pointer'>
-                    <span className='underline underline-offset-4 text-indigo-500'>{activity.file}</span>
+                    <span className='underline underline-offset-4 text-indigo-500 line-clamp-1'>{activity.file}</span>
                     <HiCloudDownload className='text-xl text-neutral-700' />
                 </div>}
             </div>

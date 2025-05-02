@@ -7,16 +7,20 @@ import baseQuery from './setupApi';
     tagTypes: ["Projects", "Phases", "Tasks", "Project", "Activities"],
     endpoints: (builder) => ({
         getProject: builder.query({
-            query: (limit = 10, page = 1) => ({url: '/projects', method: "GET", params: {
-              limit,
-              page
-            }}),
+            query: (params = {limit: 10, page: 1}) => ({url: '/projects', method: "GET", params}),
             providesTags: ["Projects"]
 
         }),
         getProjectById: builder.query({
           query: (id) => ({url: `/project/${id}`, method: "GET"}),
           providesTags: ["Project"]
+        }),
+        updateProjectTeam: builder.mutation({
+          query: (body) => {
+            console.log(body);
+            return ({ url: `/project/${body.id}/team`, method: 'PATCH', body: {teams: body.teams}})
+          },
+          invalidatesTags: ["Project"]
         }),
         createProject: builder.mutation({
           query: (body) => ({url: "/project", method: "POST", body}),
@@ -67,6 +71,7 @@ import baseQuery from './setupApi';
   export const {
     useGetProjectQuery, 
     useGetProjectByIdQuery, 
+    useUpdateProjectTeamMutation,
     useCreateProjectMutation, 
     useDeleteProjectMutation ,
     useGetPhasesQuery,

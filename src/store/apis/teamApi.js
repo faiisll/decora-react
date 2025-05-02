@@ -8,7 +8,9 @@ import baseQuery from './setupApi';
     tagTypes: ["Teams", "Invitation"],
     endpoints: (builder) => ({
         getTeams: builder.query({
-            query: () => ({url: '/teams', method: "GET"}),
+            query: (limit = 10) => ({url: '/teams', method: "GET", params: {
+                limit
+            }}),
 
         }),
         getTeamsInvitations: builder.query({
